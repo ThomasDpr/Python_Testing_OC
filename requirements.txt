@@ -5,6 +5,8 @@ charset-normalizer==3.4.1
 click==8.1.8
 ConfigArgParse==1.7
 coverage==7.6.10
+dnspython==2.7.0
+email_validator==2.2.0
 Flask==3.1.0
 Flask-Cors==5.0.0
 Flask-Login==0.6.3
