@@ -48,7 +48,10 @@ def showSummary():
             return redirect(url_for('index'))  # Rediriger vers la page d'accueil
             
         # Valider le format de l'email
-        validate_email(email)  # Utilise la bibliothèque email_validator pour vérifier le format
+        # check_deliverability=False car on ne veut pas vérifier si le domaine peut réellement envoyer des emails
+        # On vérifie uniquement la syntaxe de l'email (présence de @, format correct)
+        # Sans cette option, les domaines fictifs comme irontemple.com seraient rejetés
+        validate_email(email, check_deliverability=False)
         
         # Chercher le club correspondant à l'email
         club = [club for club in clubs if club['email'] == email][0]  # Trouver le club avec l'email donné
@@ -92,7 +95,12 @@ def purchasePlaces():
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
     
-    # Vérifier si le club a assez de points
+    # Vérifier la limite de 12 places
+    if placesRequired > 12:
+        flash('You can only book up to 12 places per competition')
+        return render_template('welcome.html', club=club, competitions=competitions)
+    
+    # Vérification des points disponibles (du bug précédent)
     club_points = int(club['points'])
     if placesRequired > club_points:
         flash('Not enough points available!')
@@ -100,11 +108,10 @@ def purchasePlaces():
     
     # Si tout est OK, procéder à la réservation
     competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-    club['points'] = str(club_points - placesRequired)  # Mettre à jour les points
+    club['points'] = str(club_points - placesRequired)
     
     flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
-
 
 # TODO: Add route for points display
 @app.route('/points')
