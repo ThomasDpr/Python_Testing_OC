@@ -1,27 +1,103 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" class="h-full bg-gray-50">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GUDLFT Registration</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                            950: '#082f49',
+                        },
+                    },
+                    borderRadius: {
+                        'lg': '0.5rem',
+                        'xl': '1rem',
+                    },
+                },
+            },
+        }
+    </script>
 </head>
-<body>
-    <header>
-        <h1>Welcome to the GUDLFT Registration Portal!</h1>
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
-    </header>
-    
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+<body class="h-full bg-gray-50 text-gray-900 antialiased">
+    <div class="min-h-full">
+        <nav class="bg-primary-600 shadow-sm">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="flex h-16 justify-between">
+                    <div class="flex">
+                        <div class="flex flex-shrink-0 items-center">
+                            <span class="text-white text-xl font-bold">GÜDLFT</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        {% if club is defined %}
+                        <div class="text-white mr-4">
+                            <span class="text-sm">Points: <span class="font-semibold">{{ club.points }}</span></span>
+                        </div>
+                        <a href="{{ url_for('logout') }}" class="rounded-md bg-primary-700 px-3 py-2 text-sm font-medium text-white hover:bg-primary-800">
+                            Logout
+                        </a>
+                        {% else %}
+                        <a href="{{ url_for('index') }}" class="rounded-md bg-primary-700 px-3 py-2 text-sm font-medium text-white hover:bg-primary-800">
+                            Home
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="py-10">
+            <header>
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-3xl font-bold leading-tight tracking-tight text-gray-900">
+                        {% block header %}Welcome to the GUDLFT Registration Portal!{% endblock %}
+                    </h1>
+                </div>
+            </header>
+            
+            <main>
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                            <div class="mb-6">
+                                {% for message in messages %}
+                                    <div class="rounded-md bg-yellow-50 p-4 mb-2">
+                                        <div class="flex">
+                                            <div class="flex-shrink-0">
+                                                <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                    <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+                                                </svg>
+                                            </div>
+                                            <div class="ml-3">
+                                                <p class="text-sm text-yellow-700">{{ message }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    
+                    {% block content %}{% endblock %}
+                </div>
+            </main>
+        </div>
+    </div>
 </body>
 </html>
