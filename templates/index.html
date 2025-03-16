@@ -1,28 +1,33 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GUDLFT Registration</title>
-</head>
-<body>
-    <h1>Welcome to the GUDLFT Registration Portal!</h1>
+{% extends 'base.html' %}
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-                <p style="color: red;">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-    Please enter your secretary email to continue:
-    <form action="showSummary" method="post">
-        <label for="email">Email:</label>
-        <input type="email" name="email" id=""/>
-        <button type="submit">Enter</button>
-    </form>
+{% block header %}Welcome to the GUDLFT Registration Portal!{% endblock %}
 
-    <div style="margin-top: 20px;">
-        <a href="{{ url_for('points') }}">View Clubs Points Board</a>
+{% block content %}
+<div class="bg-white shadow sm:rounded-lg max-w-md mx-auto">
+    <div class="px-4 py-5 sm:p-6">
+        <h2 class="text-lg font-medium leading-6 text-gray-900 mb-4">Secretary Login</h2>
+        <div class="mt-2 max-w-xl text-sm text-gray-500 mb-6">
+            <p>Please enter your secretary email to continue.</p>
+        </div>
+        <form action="showSummary" method="post" class="space-y-4">
+            <div>
+                <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
+                <div class="mt-2">
+                    <input type="email" name="email" id="email" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary-600 sm:text-sm sm:leading-6" placeholder="john@simplylift.co" required />
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="inline-flex w-full justify-center rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">
+                    Sign In
+                </button>
+            </div>
+        </form>
     </div>
-</body>
-</html>
+</div>
+
+<div class="mt-8 text-center">
+    <a href="{{ url_for('points') }}" class="text-primary-600 hover:text-primary-500 font-medium">
+        View Clubs Points Board <span aria-hidden="true">→</span>
+    </a>
+</div>
+{% endblock %}

@@ -112,30 +112,46 @@ def book(competition, club):
 #     return render_template('welcome.html', club=club, competitions=competitions)
 
 # Nouveau code (correction Issues #2) :
-@app.route('/purchasePlaces',methods=['POST'])
+@app.route('/purchasePlaces', methods=['POST'])
 def purchasePlaces():
+    # Récupérer la compétition et le club à partir des données du formulaire
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     placesRequired = int(request.form['places'])
-    
-    # Vérifier la limite de 12 places
-    if placesRequired > 12:
-        flash('You can only book up to 12 places per competition')
+
+    # Si un compet est passé alors : 
+        # pass
+
+    # Bonus
+    # Vérifier si le nombre de places est positif
+    if placesRequired <= 0:
+        flash('You cannot book a negative or null number of places')
         return render_template('welcome.html', club=club, competitions=competitions)
-    
-    # Vérification des points disponibles (du bug précédent)
+
+
+    # Vérifier les points disponibles
     club_points = int(club['points'])
     if placesRequired > club_points:
         flash('Not enough points available!')
         return render_template('welcome.html', club=club, competitions=competitions)
-    
-    # Si tout est OK, procéder à la réservation
-    competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-    club['points'] = str(club_points - placesRequired)
-    
+
+    # Vérifier si le nombre de places demandées dépasse la limite de 12
+    if placesRequired > 12:
+        flash('You can only book up to 12 places per competition')
+        return render_template('welcome.html', club=club, competitions=competitions)
+
+    # Vérifier si suffisamment de places sont disponibles dans la compétition
+    competition_places = int(competition['numberOfPlaces'])
+    if placesRequired > competition_places:
+        flash('Not enough places available in the competition!')
+        return render_template('welcome.html', club=club, competitions=competitions)
+
+    # Mettre à jour les points du club et les places de la compétition
+    club['points'] = club_points - placesRequired
+    competition['numberOfPlaces'] = competition_places - placesRequired
+
     flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
-
 # TODO: Add route for points display
 @app.route('/points')
 def points():
@@ -146,3 +162,6 @@ def points():
 @app.route('/logout')
 def logout():
     return redirect(url_for('index'))
+
+if __name__ == "__main__":
+    app.run(debug=True)
